@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component} from '@angular/core';
+import { RectComponent} from 'app/rect/rect.component';
 
 @Component({
   selector: 'app-root',

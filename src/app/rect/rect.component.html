@@ -1,0 +1,5 @@
+<svg width="510" height="510" >
+    <rect *ngFor="let item of gridArray" class='square'  fill = '#fff'  [id] = 'item.id'
+        [attr.x]='item.x' [attr.y]='item.y' 
+        [attr.width]='item.width' [attr.height]='item.height'></rect>
+</svg>
