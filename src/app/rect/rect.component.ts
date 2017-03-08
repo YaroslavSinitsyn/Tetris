@@ -29,8 +29,8 @@ export class RectComponent implements AfterViewInit {
   gridArray: Rect[];
   rowMax: number = 20;
   columnMax: number = 10;
-  columnMin: number = 0;
-  count:number = 0;
+  columnMin: number = -1;
+  count:number = 15;
   interval;
   currentFigure: Figure;
   currentFigureArray:Figure[];
@@ -38,6 +38,7 @@ export class RectComponent implements AfterViewInit {
   lastFigure: Figure;
   countFigure:number;
   flag:boolean = false;
+  flagMove:boolean = false;
  
   
    constructor() {
@@ -60,7 +61,6 @@ export class RectComponent implements AfterViewInit {
         data.push(new Rect(rect.id, rect.x, rect.y, rect.width, rect.height));
         rect.x += rect.width;
       }
-
       rect.x = 1;
       rect.y += rect.height
     }
@@ -68,14 +68,35 @@ export class RectComponent implements AfterViewInit {
     return data;
   }
 
+  checkFigure(direction:Direction):boolean {
+    let figure = this.currentFigureArray[this.countFigure];
+    
+    for(let item in figure) {
+      if(item !== 'type') {
+        let str:string = figure[item];
+        let arrStr:string[] = str.split('.');
+        if(arrStr[1] === '0'&& direction === Direction.left)
+            return false;
+        
+        if(arrStr[1] === '9' && direction === Direction.rigth)
+            return false;
+        
+        if(arrStr[0] === '19' && direction === Direction.down)
+            return false;
+      }     
+    }
+    return true;
+  }
   @HostListener('window:keydown', ['$event'])
   keyboardInput(event: KeyboardEvent) {
     switch (event.keyCode) {
       case KeyCode.leftCode:
-    
+            if(this.checkFigure(Direction.left))
+              this.move(Direction.left);
         break;
       case KeyCode.rightCode:
-
+            if(this.checkFigure(Direction.rigth))
+              this.move(Direction.rigth);
         break;
       case KeyCode.upCode:
             this.clearFigure(this.currentFigureArray[this.countFigure]);
@@ -91,7 +112,8 @@ export class RectComponent implements AfterViewInit {
             console.log(this.countFigure);
             break;
       case KeyCode.downCode:
-            this.down();
+            if(this.checkFigure(Direction.down))
+              this.move(Direction.down);
         break;
       default:
         break;
@@ -100,12 +122,12 @@ export class RectComponent implements AfterViewInit {
 
   start(): void {
     this.interval = setInterval(() => {
-      
-        this.down();
+        //this.flag = false; 
+        this.move(Direction.down);
         
         if(this.flag) {
           this.createNewFigure();
-          this.showFigure(this.currentFigureArray[0]);
+          this.showFigure(this.currentFigureArray[this.countFigure]);
           this.flag = false;
           this.fillArrayBlock.forEach( block => {
             document.getElementById(block).setAttribute("fill", "#2C93E8");
@@ -118,32 +140,40 @@ export class RectComponent implements AfterViewInit {
     clearInterval(this.interval);
   }
 
-  down() {
+  move(direction:Direction) {
     this.clearFigure(this.currentFigureArray[this.countFigure]);
     let tempCurrentFigureArray = new Array<Figure>();
     let tempFigure:Figure = new Figure();
-
+    let fig:Figure = new Figure();
     for(let figure of this.currentFigureArray) {
-      tempFigure = this.moveFigure(figure, Direction.down);
+      tempFigure = this.moveFigure(figure, direction);
+      if(figure === this.currentFigureArray[this.countFigure])
+        fig = tempFigure;
+
       if(tempFigure !== undefined)
         tempCurrentFigureArray.push(tempFigure);
       else if((tempFigure === undefined) && figure === this.currentFigureArray[this.countFigure]) {
         this.flag = true;
-        for(let item in figure) {
-          if(item !== 'type')
-            this.fillArrayBlock.push(figure[item]);
+            for(let item in figure) {
+              if(item !== 'type')
+                this.fillArrayBlock.push(figure[item]);
+            }
         }
           
       }
-    }
+    
 
     if(!this.flag) {
+      let index = tempCurrentFigureArray.indexOf(fig);
+      this.countFigure = index;
+      console.log(index);
       this.currentFigureArray = [];
       this.currentFigureArray = [...tempCurrentFigureArray];
       this.showFigure(tempCurrentFigureArray[this.countFigure]);
     }
     
   }
+  
 
   clearFigure(figure: Figure): void {
     for (let item in figure) {
@@ -160,17 +190,20 @@ export class RectComponent implements AfterViewInit {
   }
 
   createNewFigure() {
-    this.countFigure = 0;
     this.currentFigure = figureDate[this.count];
     this.currentFigureArray = new Array<Figure>();
 
     this.currentFigureArray = figureDate.filter( figure => {
-      if(figure.type === this.currentFigure.type) {
+      if(figure.type == this.currentFigure.type) {
         return figure
       }
     });
 
-    this.count++;
+    this.countFigure = this.currentFigureArray.indexOf(this.currentFigure);
+    if(figureDate.length-1 !== this.count)
+        this.count++; 
+    else
+      this.count = 0
   }
 
   moveFigure(figure:Figure, direction:Direction):Figure {
@@ -179,7 +212,7 @@ export class RectComponent implements AfterViewInit {
     let block:string;
     for(let key in figure) {
       if (key !== 'type') {
-          block = this.move(figure[key],direction);
+          block = this.moveBlock(figure[key],direction);
           if(block !== undefined) {
             newFigure[key] = block
           }
@@ -192,7 +225,7 @@ export class RectComponent implements AfterViewInit {
     return newFigure;
   }
 
-  move(block:string, direction:Direction):string {
+  moveBlock(block:string, direction:Direction):string {
     let newBlock:string;
     let rowColumn = block.split('.');
 
@@ -206,10 +239,20 @@ export class RectComponent implements AfterViewInit {
           newBlock = undefined;
         break;
       case Direction.left:
-        newBlock = `${rowColumn[0]}.${+rowColumn[1] - 1}`;
+        let temp:string[] = block.split('.')
+        let ind:number = this.fillArrayBlock.indexOf(`${temp[0]}.${+temp[1] - 1}`);
+        if((this.columnMin !== (+rowColumn[1] - 1)) && ind === -1)
+          newBlock = `${rowColumn[0]}.${+rowColumn[1] - 1}`;
+        else
+          newBlock = undefined;
         break;
       case Direction.rigth:
-        newBlock = `${rowColumn[0]}.${+rowColumn[1] + 1}`;
+        let t:string[] = block.split('.')
+        let i:number = this.fillArrayBlock.indexOf(`${t[0]}.${+t[1] + 1}`);
+        if((this.columnMax !== (+rowColumn[1] + 1)) && i === -1)
+          newBlock = `${rowColumn[0]}.${+rowColumn[1] + 1}`;
+        else
+          newBlock = undefined;
         break;
       default:
         console.error('Error move method bad parameter direction');

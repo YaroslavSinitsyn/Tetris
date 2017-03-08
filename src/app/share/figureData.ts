@@ -121,10 +121,10 @@ export const figureDate:Figure[] = [
         type:TypeFigure.Four
     },
     {
-        block1:'2.4',//  #
-        block2:'1.4',// ##
-        block3:'1.5',// #
-        block4:'0.4',//
+        block1:'0.5',//   #
+        block2:'1.5',// ##
+        block3:'1.4',// #
+        block4:'2.4',//
         type:TypeFigure.Four 
     },
     {
