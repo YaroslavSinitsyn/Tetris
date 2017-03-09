@@ -30,7 +30,7 @@ export class RectComponent implements AfterViewInit {
   rowMax: number = 20;
   columnMax: number = 10;
   columnMin: number = -1;
-  count:number = 15;
+  count:number = 0;
   interval;
   currentFigure: Figure;
   currentFigureArray:Figure[];
@@ -75,14 +75,30 @@ export class RectComponent implements AfterViewInit {
       if(item !== 'type') {
         let str:string = figure[item];
         let arrStr:string[] = str.split('.');
-        if(arrStr[1] === '0'&& direction === Direction.left)
-            return false;
+        let index:number;
+        let block:string;
+        switch(direction) {
+          case Direction.left:
+              block = this.moveBlock(figure[item],direction);
+              if(arrStr[1] === '0' || block === undefined)
+                return false;
+
+            break;
+          case Direction.rigth:
+              block = this.moveBlock(figure[item],direction);
+              if(arrStr[1] === '9' || block === undefined)
+                return false;
+            break;
+          case Direction.down:
+              block = this.moveBlock(figure[item],direction);
+              if(arrStr[0] === '19' || block === undefined)
+                return false;
+            break;
+          default:
+            break;
+        }
+                
         
-        if(arrStr[1] === '9' && direction === Direction.rigth)
-            return false;
-        
-        if(arrStr[0] === '19' && direction === Direction.down)
-            return false;
       }     
     }
     return true;
@@ -99,17 +115,56 @@ export class RectComponent implements AfterViewInit {
               this.move(Direction.rigth);
         break;
       case KeyCode.upCode:
-            this.clearFigure(this.currentFigureArray[this.countFigure]);
+            let tempFigure:Figure = this.currentFigureArray[this.countFigure];
+            
             let length = this.currentFigureArray.length - 1;
+            let flag:boolean = true;
+            
             if(this.countFigure !== length) {
-              this.countFigure++;
+               this.countFigure++;
+            }
+            else {
+              this.countFigure = 0;
+            }
+
+            while(this.countFigure <= length) {
+              let figure:Figure = new Figure();
+              figure = this.currentFigureArray[this.countFigure];
+              flag = true;
+              
+              for(let index in figure) {
+                if(index !== 'type') {
+                  let block = figure[index];
+                  let rowColumn = block.split('.');
+                
+                  if(+rowColumn[1] < 0)
+                    flag = false;
+              
+                  if(+rowColumn[1] > 9)
+                    flag = false;
+                }
+             }
+
+            if(flag)
+              break;
+            else {
+              if(this.countFigure === length) {
+                this.countFigure = 0;
+              } 
+              else
+                this.countFigure++;
+            }
+              
+               
+          }
+
+             
+            if(flag) {
+              this.clearFigure(tempFigure);
+              this.showFigure(this.currentFigureArray[this.countFigure]);
               this.currentFigure = this.currentFigureArray[this.countFigure];
             }
-            else
-              this.countFigure = 0;
-
-            this.showFigure(this.currentFigureArray[this.countFigure]);
-            console.log(this.countFigure);
+              
             break;
       case KeyCode.downCode:
             if(this.checkFigure(Direction.down))
@@ -122,7 +177,6 @@ export class RectComponent implements AfterViewInit {
 
   start(): void {
     this.interval = setInterval(() => {
-        //this.flag = false; 
         this.move(Direction.down);
         
         if(this.flag) {
@@ -142,9 +196,11 @@ export class RectComponent implements AfterViewInit {
 
   move(direction:Direction) {
     this.clearFigure(this.currentFigureArray[this.countFigure]);
+    
     let tempCurrentFigureArray = new Array<Figure>();
     let tempFigure:Figure = new Figure();
     let fig:Figure = new Figure();
+    
     for(let figure of this.currentFigureArray) {
       tempFigure = this.moveFigure(figure, direction);
       if(figure === this.currentFigureArray[this.countFigure])
@@ -166,7 +222,6 @@ export class RectComponent implements AfterViewInit {
     if(!this.flag) {
       let index = tempCurrentFigureArray.indexOf(fig);
       this.countFigure = index;
-      console.log(index);
       this.currentFigureArray = [];
       this.currentFigureArray = [...tempCurrentFigureArray];
       this.showFigure(tempCurrentFigureArray[this.countFigure]);
@@ -241,7 +296,7 @@ export class RectComponent implements AfterViewInit {
       case Direction.left:
         let temp:string[] = block.split('.')
         let ind:number = this.fillArrayBlock.indexOf(`${temp[0]}.${+temp[1] - 1}`);
-        if((this.columnMin !== (+rowColumn[1] - 1)) && ind === -1)
+        if(/*(this.columnMin !== (+rowColumn[1] - 1)) /*&&*/ ind === -1)
           newBlock = `${rowColumn[0]}.${+rowColumn[1] - 1}`;
         else
           newBlock = undefined;
@@ -249,7 +304,7 @@ export class RectComponent implements AfterViewInit {
       case Direction.rigth:
         let t:string[] = block.split('.')
         let i:number = this.fillArrayBlock.indexOf(`${t[0]}.${+t[1] + 1}`);
-        if((this.columnMax !== (+rowColumn[1] + 1)) && i === -1)
+        if(/*(this.columnMax !== (+rowColumn[1] + 1))  &&*/ i === -1)
           newBlock = `${rowColumn[0]}.${+rowColumn[1] + 1}`;
         else
           newBlock = undefined;
