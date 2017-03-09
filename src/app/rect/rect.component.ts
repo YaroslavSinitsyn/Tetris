@@ -51,58 +51,6 @@ export class RectComponent implements AfterViewInit {
      this.start();
   }
 
-  gridData(): Rect[] {
-    let data: Rect[] = new Array<Rect>();
-    let rect: Rect = new Rect();
-
-    for (var row = 0; row < this.rowMax; row++) {
-      for (var column = 0; column < this.columnMax; column++) {
-        rect.id = `${row}.${column}`;
-        data.push(new Rect(rect.id, rect.x, rect.y, rect.width, rect.height));
-        rect.x += rect.width;
-      }
-      rect.x = 1;
-      rect.y += rect.height
-    }
-
-    return data;
-  }
-
-  checkFigure(direction:Direction):boolean {
-    let figure = this.currentFigureArray[this.countFigure];
-    
-    for(let item in figure) {
-      if(item !== 'type') {
-        let str:string = figure[item];
-        let arrStr:string[] = str.split('.');
-        let index:number;
-        let block:string;
-        switch(direction) {
-          case Direction.left:
-              block = this.moveBlock(figure[item],direction);
-              if(arrStr[1] === '0' || block === undefined)
-                return false;
-
-            break;
-          case Direction.rigth:
-              block = this.moveBlock(figure[item],direction);
-              if(arrStr[1] === '9' || block === undefined)
-                return false;
-            break;
-          case Direction.down:
-              block = this.moveBlock(figure[item],direction);
-              if(arrStr[0] === '19' || block === undefined)
-                return false;
-            break;
-          default:
-            break;
-        }
-                
-        
-      }     
-    }
-    return true;
-  }
   @HostListener('window:keydown', ['$event'])
   keyboardInput(event: KeyboardEvent) {
     switch (event.keyCode) {
@@ -154,11 +102,9 @@ export class RectComponent implements AfterViewInit {
               else
                 this.countFigure++;
             }
-              
                
           }
 
-             
             if(flag) {
               this.clearFigure(tempFigure);
               this.showFigure(this.currentFigureArray[this.countFigure]);
@@ -174,6 +120,120 @@ export class RectComponent implements AfterViewInit {
         break;
     }
   }
+
+  gridData(): Rect[] {
+    let data: Rect[] = new Array<Rect>();
+    let rect: Rect = new Rect();
+
+    for (var row = 0; row < this.rowMax; row++) {
+      for (var column = 0; column < this.columnMax; column++) {
+        rect.id = `${row}.${column}`;
+        data.push(new Rect(rect.id, rect.x, rect.y, rect.width, rect.height));
+        rect.x += rect.width;
+      }
+      rect.x = 1;
+      rect.y += rect.height
+    }
+
+    return data;
+  }
+
+  checkFigure(direction:Direction):boolean {
+    let figure = this.currentFigureArray[this.countFigure];
+    
+    for(let item in figure) {
+      if(item !== 'type') {
+        let str:string = figure[item];
+        let arrStr:string[] = str.split('.');
+        let index:number;
+        let block:string;
+        switch(direction) {
+          case Direction.left:
+              block = this.moveBlock(figure[item],direction);
+              if(arrStr[1] === '0' || block === undefined)
+                return false;
+
+            break;
+          case Direction.rigth:
+              block = this.moveBlock(figure[item],direction);
+              if(arrStr[1] === '9' || block === undefined)
+                return false;
+            break;
+          case Direction.down:
+              block = this.moveBlock(figure[item],direction);
+              if(arrStr[0] === '19' || block === undefined)
+                return false;
+            break;
+          default:
+            break;
+        }
+                
+      }     
+    }
+    return true;
+  }
+
+  cleareRow():void{
+
+    if(this.fillArrayBlock.length !== 0) {
+      let tempFillSort:string[] = this.fillArrayBlock.sort();
+      let blockMin:number = +((tempFillSort[0].split('.'))[0]);
+      let blockMax:number = +((tempFillSort[this.fillArrayBlock.length-1].split('.'))[0]);
+
+      while(blockMin <= blockMax) {
+          let tempArray:string[] = new Array<string>();
+          tempArray= tempFillSort.filter(block => {
+          let row:number = +(block.split('.')[0]);
+          if(blockMax === row)
+            return block;
+          });
+
+          if(tempArray.length === 10) {
+            tempArray.forEach(item => {
+              document.getElementById(item).setAttribute("fill", "#fff");
+            });
+
+            this.fillArrayBlock.forEach(item => {
+                  document.getElementById(item).setAttribute("fill", "#fff");
+              });
+
+            this.fillArrayBlock = this.fillArrayBlock.filter(item => {
+                let rowTemp:number = +(item.split('.')[0]);
+                let columnTemp:string = (item.split('.')[1]);
+                if(blockMax !== rowTemp) {
+                  return item;
+                }
+
+              }).map(block => {
+                let rowTemp:number = +(block.split('.')[0]);
+                let columnTemp:string = (block.split('.')[1]);
+                if(blockMax > rowTemp) {
+                    return `${rowTemp+1}.${columnTemp}`;
+                }
+                else
+                  return block;
+              });
+
+              this.fillArrayBlock.forEach(item => {
+                  document.getElementById(item).setAttribute("fill", "#2C93E8");
+              });
+
+              tempFillSort = this.fillArrayBlock.sort();
+              blockMin = +((tempFillSort[0].split('.'))[0]);
+              blockMax = +((tempFillSort[this.fillArrayBlock.length-1].split('.'))[0]);
+          }
+          else
+            blockMax--
+      }
+
+      
+      console.log(blockMin);
+      console.log(blockMax);
+    }
+    
+  }
+
+  
 
   start(): void {
     this.interval = setInterval(() => {
@@ -245,6 +305,7 @@ export class RectComponent implements AfterViewInit {
   }
 
   createNewFigure() {
+    this.cleareRow();
     this.currentFigure = figureDate[this.count];
     this.currentFigureArray = new Array<Figure>();
 
@@ -296,7 +357,7 @@ export class RectComponent implements AfterViewInit {
       case Direction.left:
         let temp:string[] = block.split('.')
         let ind:number = this.fillArrayBlock.indexOf(`${temp[0]}.${+temp[1] - 1}`);
-        if(/*(this.columnMin !== (+rowColumn[1] - 1)) /*&&*/ ind === -1)
+        if(ind === -1)
           newBlock = `${rowColumn[0]}.${+rowColumn[1] - 1}`;
         else
           newBlock = undefined;
@@ -304,7 +365,7 @@ export class RectComponent implements AfterViewInit {
       case Direction.rigth:
         let t:string[] = block.split('.')
         let i:number = this.fillArrayBlock.indexOf(`${t[0]}.${+t[1] + 1}`);
-        if(/*(this.columnMax !== (+rowColumn[1] + 1))  &&*/ i === -1)
+        if(i === -1)
           newBlock = `${rowColumn[0]}.${+rowColumn[1] + 1}`;
         else
           newBlock = undefined;
