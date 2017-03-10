@@ -1,6 +1,7 @@
 import { Component, HostListener, AfterViewInit} from '@angular/core';
 import { Figure } from '../share/figure';
-import { figureDate } from '../share/figureData'
+import { figureDate } from '../share/figureData';
+import { ScoreService } from '../share/score.service';
 
 class Rect {
   constructor(public id: string = '0.0', public x: number = 1, public y: number = 1, public width: number = 25, public height: number = 25) {}
@@ -41,7 +42,7 @@ export class RectComponent implements AfterViewInit {
   flagMove:boolean = false;
  
   
-   constructor() {
+   constructor(private valueScore:ScoreService ) {
     this.gridArray = this.gridData();
     this.createNewFigure();
   }
@@ -218,6 +219,7 @@ export class RectComponent implements AfterViewInit {
                   document.getElementById(item).setAttribute("fill", "#2C93E8");
               });
 
+              this.valueScore.setScore();
               tempFillSort = this.fillArrayBlock.sort();
               blockMin = +((tempFillSort[0].split('.'))[0]);
               blockMax = +((tempFillSort[this.fillArrayBlock.length-1].split('.'))[0]);
@@ -225,15 +227,10 @@ export class RectComponent implements AfterViewInit {
           else
             blockMax--
       }
-
-      
-      console.log(blockMin);
-      console.log(blockMax);
     }
     
   }
 
-  
 
   start(): void {
     this.interval = setInterval(() => {
