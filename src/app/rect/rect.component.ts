@@ -174,13 +174,28 @@ export class RectComponent implements AfterViewInit {
     return true;
   }
 
+  sortArrayFill(a:string, b:string):number {
+    let rowA:number = +a.split('.')[0];
+    let rowB:number = +b.split('.')[0];
+
+    if(rowA > rowB)
+        return 1
+
+    if(rowA < rowB)
+        return -1;
+                
+    return 0;
+  }
+
   cleareRow():void{
 
     if(this.fillArrayBlock.length !== 0) {
-      let tempFillSort:string[] = this.fillArrayBlock.sort();
+      let tempFillSort:string[] = this.fillArrayBlock.sort(this.sortArrayFill);
       let blockMin:number = +((tempFillSort[0].split('.'))[0]);
       let blockMax:number = +((tempFillSort[this.fillArrayBlock.length-1].split('.'))[0]);
-
+      
+      console.log(blockMin);
+      console.log(blockMax);
       while(blockMin <= blockMax) {
           let tempArray:string[] = new Array<string>();
           tempArray= tempFillSort.filter(block => {
@@ -220,9 +235,12 @@ export class RectComponent implements AfterViewInit {
               });
 
               this.valueScore.setScore();
-              tempFillSort = this.fillArrayBlock.sort();
+              tempFillSort = this.fillArrayBlock.sort(this.sortArrayFill);
               blockMin = +((tempFillSort[0].split('.'))[0]);
               blockMax = +((tempFillSort[this.fillArrayBlock.length-1].split('.'))[0]);
+
+              console.log(blockMin);
+              console.log(blockMax);
           }
           else
             blockMax--
