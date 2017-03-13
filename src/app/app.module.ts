@@ -7,12 +7,14 @@ import { AppComponent } from './app.component';
 import { RectComponent } from './rect/rect.component';
 import { ValueComponent } from 'app/value/value.component';
 import { ScoreService } from 'app/share/score.service';
+import { MenuPanelComponent } from './menu-panel/menu-panel.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RectComponent,
-    ValueComponent
+    ValueComponent,
+    MenuPanelComponent
   ],
   imports: [
     BrowserModule,

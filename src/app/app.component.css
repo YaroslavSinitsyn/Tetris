@@ -1,1 +1,9 @@
+#main {
+    margin-top: 10px;
+    float: left;
+    width: 400px;
+}
 
+#score {
+    margin-top: 0px;
+}

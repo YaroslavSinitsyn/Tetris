@@ -29,7 +29,7 @@ enum Direction {
 export class RectComponent implements AfterViewInit {
   gridArray: Rect[];
   rowMax: number = 20;
-  columnMax: number = 10;
+  columnMax: number = 15;
   columnMin: number = -1;
   count:number = 0;
   interval;
@@ -89,7 +89,7 @@ export class RectComponent implements AfterViewInit {
                   if(+rowColumn[1] < 0)
                     flag = false;
               
-                  if(+rowColumn[1] > 9)
+                  if(+rowColumn[1] > this.columnMax-1)
                     flag = false;
                 }
              }
@@ -157,7 +157,7 @@ export class RectComponent implements AfterViewInit {
             break;
           case Direction.rigth:
               block = this.moveBlock(figure[item],direction);
-              if(arrStr[1] === '9' || block === undefined)
+              if(arrStr[1] === '14' || block === undefined)
                 return false;
             break;
           case Direction.down:
@@ -204,7 +204,7 @@ export class RectComponent implements AfterViewInit {
             return block;
           });
 
-          if(tempArray.length === 10) {
+          if(tempArray.length === this.columnMax) {
             tempArray.forEach(item => {
               document.getElementById(item).setAttribute("fill", "#fff");
             });

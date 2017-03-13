@@ -5,7 +5,8 @@ export enum TypeFigure {
     LetetL,
     Block,
     Line,
-    Four
+    Four,
+    LetetLV
 }
 export const figureDate:Figure[] = [
     {
@@ -37,20 +38,6 @@ export const figureDate:Figure[] = [
       type:TypeFigure.Tring
     },
     {
-        block1:'2.5',//#
-        block2:'2.4',//#
-        block3:'1.4',//##
-        block4:'0.4',
-        type:TypeFigure.LetetL
-    },
-    {
-        block1:'2.4',// #
-        block2:'2.3',// #
-        block3:'1.4',//##
-        block4:'0.4',
-        type:TypeFigure.LetetL
-    },
-    {
         block1:'1.5',//###
         block2:'0.3',//  #
         block3:'0.4',
@@ -76,20 +63,6 @@ export const figureDate:Figure[] = [
         block2:'0.5',//###
         block3:'0.4',//#
         block4:'0.3',
-        type:TypeFigure.LetetL
-    },
-    {
-        block1:'2.4',//##
-        block2:'1.4',// #
-        block3:'0.4',// #
-        block4:'0.3',
-        type:TypeFigure.LetetL
-    },
-    {
-        block1:'2.4',//##
-        block2:'1.4',//#
-        block3:'0.4',//#
-        block4:'0.5',
         type:TypeFigure.LetetL
     },
     {
@@ -140,5 +113,33 @@ export const figureDate:Figure[] = [
         block3:'0.4',//  
         block4:'0.3', //
         type:TypeFigure.Four 
-    }
+    },
+    {
+        block1:'2.4',//##
+        block2:'1.4',//#
+        block3:'0.4',//#
+        block4:'0.5',
+        type:TypeFigure.LetetLV
+    },
+    {
+        block1:'2.5',//#
+        block2:'2.4',//#
+        block3:'1.4',//##
+        block4:'0.4',
+        type:TypeFigure.LetetLV
+    },
+    {
+        block1:'2.4',//##
+        block2:'1.4',// #
+        block3:'0.4',// #
+        block4:'0.3',
+        type:TypeFigure.LetetLV
+    },
+    {
+        block1:'2.4',// #
+        block2:'2.3',// #
+        block3:'1.4',//##
+        block4:'0.4',
+        type:TypeFigure.LetetLV
+    },
 ];
