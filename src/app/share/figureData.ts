@@ -82,10 +82,10 @@ export const figureDate:Figure[] = [
         type:TypeFigure.J
     },
     {
-        block1:'1.8',//###
-        block2:'0.6',//  #
-        block3:'0.7',
-        block4:'0.8',
+        block1:'1.5',//###
+        block2:'0.3',//  #
+        block3:'0.4',
+        block4:'0.5',
         type:TypeFigure.J
     },
     {
@@ -118,10 +118,10 @@ export const figureDate:Figure[] = [
         type:TypeFigure.S
     },
     {
-        block1:'1.7',//  ##
-        block2:'1.6',// ##
-        block3:'0.7',//  
-        block4:'0.8', //
+        block1:'1.3',//  ##
+        block2:'1.4',// ##
+        block3:'0.4',//  
+        block4:'0.5', //
         type:TypeFigure.S
     },
     {
@@ -134,8 +134,8 @@ export const figureDate:Figure[] = [
     {
         block1:'1.5',//  ##
         block2:'1.4',//   ##
-        block3:'0.7',//  
-        block4:'0.6', //
+        block3:'0.4',//  
+        block4:'0.3', //
         type:TypeFigure.Z
     },
     
