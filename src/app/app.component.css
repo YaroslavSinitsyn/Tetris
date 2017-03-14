@@ -1,7 +1,12 @@
 #main {
     margin-top: 10px;
     float: left;
-    width: 400px;
+    width: 270px;
+}
+
+#view {
+    margin-top: 10px;
+    float: left;
 }
 
 #score {

@@ -8,6 +8,8 @@ import { RectComponent } from './rect/rect.component';
 import { ValueComponent } from 'app/value/value.component';
 import { ScoreService } from 'app/share/score.service';
 import { MenuPanelComponent } from './menu-panel/menu-panel.component';
+import { GameCycleService } from './share/lifecycle-game.service';
+import { RectService } from './rect/rect.service';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,7 @@ import { MenuPanelComponent } from './menu-panel/menu-panel.component';
     FormsModule,
     HttpModule
   ],
-  providers: [ScoreService],
+  providers: [ScoreService, GameCycleService, RectService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

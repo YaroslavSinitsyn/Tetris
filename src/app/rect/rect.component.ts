@@ -1,11 +1,11 @@
-import { Component, HostListener, AfterViewInit} from '@angular/core';
+import { Component, Input, HostListener, AfterViewInit, OnInit} from '@angular/core';
 import { Figure } from '../share/figure';
 import { figureDate } from '../share/figureData';
 import { ScoreService } from '../share/score.service';
+import { GameCycleService, CycleGame } from '../share/lifecycle-game.service';
+import { RectService } from './rect.service';
+import { Rectangle } from '../share/rectangle'
 
-class Rect {
-  constructor(public id: string = '0.0', public x: number = 1, public y: number = 1, public width: number = 25, public height: number = 25) {}
-}
 
 enum KeyCode {
   leftCode = 37,
@@ -26,34 +26,61 @@ enum Direction {
   templateUrl: 'rect.component.html',
   styleUrls: ['rect.component.css']
 })
-export class RectComponent implements AfterViewInit {
-  gridArray: Rect[];
+export class RectComponent implements OnInit, AfterViewInit {
+
+  gridArray:Rectangle[];
   rowMax: number = 20;
-  columnMax: number = 15;
+  columnMax: number = 10;
   columnMin: number = -1;
   count:number = 0;
   interval;
   currentFigure: Figure;
-  currentFigureArray:Figure[];
+  currentFigureArray:Figure[] = new Array<Figure>();
   fillArrayBlock:string[] = new Array<string>();
   lastFigure: Figure;
   countFigure:number;
   flag:boolean = false;
   flagMove:boolean = false;
- 
-  
-   constructor(private valueScore:ScoreService ) {
-    this.gridArray = this.gridData();
-    this.createNewFigure();
+  index:number = 0;
+  numFigure:number = 0;
+  @Input() row;
+  @Input() column;
+
+   constructor(private rectService:RectService, private gameCycle:GameCycleService, private valueScore:ScoreService ) {
+    gameCycle.gameEvent$.subscribe((val)=>{
+      console.log(val);
+      if(this.gameCycle.state !== CycleGame.Start && val == CycleGame.Start){
+         this.gameCycle.state = CycleGame.Start;
+         this.start();
+      }
+          
+      if(this.gameCycle.state !== CycleGame.Stop && val == CycleGame.Stop){
+        this.gameCycle.state = CycleGame.Stop;
+        this.stop();
+      }
+          
+      if(this.gameCycle.state !== CycleGame.Pause && val == CycleGame.Pause){
+          this.gameCycle.state = CycleGame.Pause;
+          this.stop();
+      }
+          
+    })
+  }
+
+  ngOnInit(): void {
+      this.gridArray = this.rectService.createGrid(this.row, this.column);
+      this.createFigure();
   }
 
   ngAfterViewInit(): void {
      this.showFigure(this.currentFigureArray[0]);
-     this.start();
   }
 
   @HostListener('window:keydown', ['$event'])
   keyboardInput(event: KeyboardEvent) {
+    if(this.gameCycle.state === CycleGame.Stop)
+        return;
+
     switch (event.keyCode) {
       case KeyCode.leftCode:
             if(this.checkFigure(Direction.left))
@@ -64,21 +91,21 @@ export class RectComponent implements AfterViewInit {
               this.move(Direction.rigth);
         break;
       case KeyCode.upCode:
-            let tempFigure:Figure = this.currentFigureArray[this.countFigure];
+            let tempFigure:Figure = this.currentFigureArray[this.index];
             
             let length = this.currentFigureArray.length - 1;
             let flag:boolean = true;
             
-            if(this.countFigure !== length) {
-               this.countFigure++;
+            if(this.index !== length) {
+               this.index++;
             }
             else {
-              this.countFigure = 0;
+              this.index = 0;
             }
 
-            while(this.countFigure <= length) {
+            while(this.index <= length) {
               let figure:Figure = new Figure();
-              figure = this.currentFigureArray[this.countFigure];
+              figure = this.currentFigureArray[this.index];
               flag = true;
               
               for(let index in figure) {
@@ -97,19 +124,19 @@ export class RectComponent implements AfterViewInit {
             if(flag)
               break;
             else {
-              if(this.countFigure === length) {
-                this.countFigure = 0;
+              if(this.index === length) {
+                this.index = 0;
               } 
               else
-                this.countFigure++;
+                this.index++;
             }
                
           }
 
             if(flag) {
               this.clearFigure(tempFigure);
-              this.showFigure(this.currentFigureArray[this.countFigure]);
-              this.currentFigure = this.currentFigureArray[this.countFigure];
+              this.showFigure(this.currentFigureArray[this.index]);
+              this.currentFigure = this.currentFigureArray[this.index];
             }
               
             break;
@@ -122,25 +149,17 @@ export class RectComponent implements AfterViewInit {
     }
   }
 
-  gridData(): Rect[] {
-    let data: Rect[] = new Array<Rect>();
-    let rect: Rect = new Rect();
-
-    for (var row = 0; row < this.rowMax; row++) {
-      for (var column = 0; column < this.columnMax; column++) {
-        rect.id = `${row}.${column}`;
-        data.push(new Rect(rect.id, rect.x, rect.y, rect.width, rect.height));
-        rect.x += rect.width;
-      }
-      rect.x = 1;
-      rect.y += rect.height
-    }
-
-    return data;
+  createFigure() {
+    this.cleareRow();
+    let tempTemp:[Figure[], number];
+    tempTemp = this.rectService.createFigure(this.numFigure);
+    this.currentFigureArray = tempTemp[0];
+    this.index = tempTemp[1];
+    this.numFigure++;
   }
 
   checkFigure(direction:Direction):boolean {
-    let figure = this.currentFigureArray[this.countFigure];
+    let figure = this.currentFigureArray[this.index];
     
     for(let item in figure) {
       if(item !== 'type') {
@@ -157,7 +176,7 @@ export class RectComponent implements AfterViewInit {
             break;
           case Direction.rigth:
               block = this.moveBlock(figure[item],direction);
-              if(arrStr[1] === '14' || block === undefined)
+              if(arrStr[1] === '9' || block === undefined)
                 return false;
             break;
           case Direction.down:
@@ -249,14 +268,13 @@ export class RectComponent implements AfterViewInit {
     
   }
 
-
   start(): void {
     this.interval = setInterval(() => {
         this.move(Direction.down);
         
         if(this.flag) {
-          this.createNewFigure();
-          this.showFigure(this.currentFigureArray[this.countFigure]);
+          this.createFigure();
+          this.showFigure(this.currentFigureArray[this.index]);
           this.flag = false;
           this.fillArrayBlock.forEach( block => {
             document.getElementById(block).setAttribute("fill", "#2C93E8");
@@ -268,42 +286,6 @@ export class RectComponent implements AfterViewInit {
   stop(): void {
     clearInterval(this.interval);
   }
-
-  move(direction:Direction) {
-    this.clearFigure(this.currentFigureArray[this.countFigure]);
-    
-    let tempCurrentFigureArray = new Array<Figure>();
-    let tempFigure:Figure = new Figure();
-    let fig:Figure = new Figure();
-    
-    for(let figure of this.currentFigureArray) {
-      tempFigure = this.moveFigure(figure, direction);
-      if(figure === this.currentFigureArray[this.countFigure])
-        fig = tempFigure;
-
-      if(tempFigure !== undefined)
-        tempCurrentFigureArray.push(tempFigure);
-      else if((tempFigure === undefined) && figure === this.currentFigureArray[this.countFigure]) {
-        this.flag = true;
-            for(let item in figure) {
-              if(item !== 'type')
-                this.fillArrayBlock.push(figure[item]);
-            }
-        }
-          
-      }
-    
-
-    if(!this.flag) {
-      let index = tempCurrentFigureArray.indexOf(fig);
-      this.countFigure = index;
-      this.currentFigureArray = [];
-      this.currentFigureArray = [...tempCurrentFigureArray];
-      this.showFigure(tempCurrentFigureArray[this.countFigure]);
-    }
-    
-  }
-  
 
   clearFigure(figure: Figure): void {
     for (let item in figure) {
@@ -319,26 +301,42 @@ export class RectComponent implements AfterViewInit {
     }
   }
 
-  createNewFigure() {
-    this.cleareRow();
-    this.currentFigure = figureDate[this.count];
-    this.currentFigureArray = new Array<Figure>();
+  move(direction:Direction) {
+    this.clearFigure(this.currentFigureArray[this.index]);
+    
+    let tempCurrentFigureArray = new Array<Figure>();
+    let tempFigure:Figure = new Figure();
+    let fig:Figure = new Figure();
+    
+    for(let figure of this.currentFigureArray) {
+      tempFigure = this.moveFigure(figure, direction);
+      if(figure === this.currentFigureArray[this.index])
+        fig = tempFigure;
 
-    this.currentFigureArray = figureDate.filter( figure => {
-      if(figure.type == this.currentFigure.type) {
-        return figure
+      if(tempFigure !== undefined)
+        tempCurrentFigureArray.push(tempFigure);
+      else if((tempFigure === undefined) && figure === this.currentFigureArray[this.index]) {
+        this.flag = true;
+            for(let item in figure) {
+              if(item !== 'type')
+                this.fillArrayBlock.push(figure[item]);
+            }
+        }
+          
       }
-    });
+    
 
-    this.countFigure = this.currentFigureArray.indexOf(this.currentFigure);
-    if(figureDate.length-1 !== this.count)
-        this.count++; 
-    else
-      this.count = 0
+    if(!this.flag) {
+      let index = tempCurrentFigureArray.indexOf(fig);
+      this.index = index;
+      this.currentFigureArray = [];
+      this.currentFigureArray = [...tempCurrentFigureArray];
+      this.showFigure(tempCurrentFigureArray[this.index]);
+    }
+    
   }
 
   moveFigure(figure:Figure, direction:Direction):Figure {
-
     let newFigure = new Figure();
     let block:string;
     for(let key in figure) {
@@ -359,38 +357,36 @@ export class RectComponent implements AfterViewInit {
   moveBlock(block:string, direction:Direction):string {
     let newBlock:string;
     let rowColumn = block.split('.');
+    newBlock = this.changeBlock(direction,rowColumn[0], rowColumn[1], this.fillArrayBlock);
 
-    switch(direction) {
-      case Direction.down:
-        let tempBlock:string[] = block.split('.')
-        let index:number = this.fillArrayBlock.indexOf(`${+tempBlock[0] + 1}.${tempBlock[1]}`);
-        if((this.rowMax !== (+rowColumn[0] + 1)) && index === -1)
-          newBlock = `${+rowColumn[0] + 1}.${rowColumn[1]}`;
-        else
-          newBlock = undefined;
-        break;
-      case Direction.left:
-        let temp:string[] = block.split('.')
-        let ind:number = this.fillArrayBlock.indexOf(`${temp[0]}.${+temp[1] - 1}`);
-        if(ind === -1)
-          newBlock = `${rowColumn[0]}.${+rowColumn[1] - 1}`;
-        else
-          newBlock = undefined;
-        break;
-      case Direction.rigth:
-        let t:string[] = block.split('.')
-        let i:number = this.fillArrayBlock.indexOf(`${t[0]}.${+t[1] + 1}`);
-        if(i === -1)
-          newBlock = `${rowColumn[0]}.${+rowColumn[1] + 1}`;
-        else
-          newBlock = undefined;
-        break;
-      default:
-        console.error('Error move method bad parameter direction');
-        break;
-    }
     return newBlock;
   }
 
+  changeBlock(direction:Direction, row:string, column:string, mapBlockFill:string[]):string {
+    let index:number;
+    let block:string;
+    switch(direction){
+      case Direction.down:
+          block = `${+row + 1}.${column}`;
+          index = mapBlockFill.indexOf(block);
+          if(this.rowMax !== (+row + 1) && index === -1)
+            return block;
+        break;
+      case Direction.left:
+          block = `${row}.${+column - 1}`;
+          index = mapBlockFill.indexOf(block);
+          if(index === -1)
+            return block;
+        break;
+      case Direction.rigth:
+          block = `${row}.${+column + 1}`;
+          index = mapBlockFill.indexOf(block);
+          if(index === -1)
+            return block;
+        break;
+    }
 
+    return undefined;
+  }
+  
 }
