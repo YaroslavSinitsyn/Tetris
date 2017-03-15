@@ -27,26 +27,17 @@ enum Direction {
   styleUrls: ['rect.component.css']
 })
 export class RectComponent implements OnInit, AfterViewInit {
-
   gridArray:Rectangle[];
-  rowMax: number = 20;
-  columnMax: number = 10;
-  columnMin: number = -1;
-  count:number = 0;
-  interval;
-  currentFigure: Figure;
+  interval:any;
   currentFigureArray:Figure[] = new Array<Figure>();
   fillArrayBlock:string[] = new Array<string>();
-  lastFigure: Figure;
-  countFigure:number;
   flag:boolean = false;
-  flagMove:boolean = false;
   index:number = 0;
   numFigure:number = 0;
   @Input() row;
   @Input() column;
 
-   constructor(private rectService:RectService, private gameCycle:GameCycleService, private valueScore:ScoreService ) {
+  constructor(private rectService:RectService, private gameCycle:GameCycleService, private valueScore:ScoreService ) {
     gameCycle.gameEvent$.subscribe((val)=>{
       console.log(val);
       if(this.gameCycle.state !== CycleGame.Start && val == CycleGame.Start){
@@ -69,11 +60,12 @@ export class RectComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
       this.gridArray = this.rectService.createGrid(this.row, this.column);
+      this.numFigure = this.randomFigure();
       this.createFigure();
   }
 
   ngAfterViewInit(): void {
-     this.showFigure(this.currentFigureArray[0]);
+     this.setColorFigure(this.currentFigureArray[this.index], '#2C93E8');
   }
 
   @HostListener('window:keydown', ['$event'])
@@ -91,55 +83,8 @@ export class RectComponent implements OnInit, AfterViewInit {
               this.move(Direction.rigth);
         break;
       case KeyCode.upCode:
-            let tempFigure:Figure = this.currentFigureArray[this.index];
-            
-            let length = this.currentFigureArray.length - 1;
-            let flag:boolean = true;
-            
-            if(this.index !== length) {
-               this.index++;
-            }
-            else {
-              this.index = 0;
-            }
-
-            while(this.index <= length) {
-              let figure:Figure = new Figure();
-              figure = this.currentFigureArray[this.index];
-              flag = true;
-              
-              for(let index in figure) {
-                if(index !== 'type') {
-                  let block = figure[index];
-                  let rowColumn = block.split('.');
-                
-                  if(+rowColumn[1] < 0)
-                    flag = false;
-              
-                  if(+rowColumn[1] > this.columnMax-1)
-                    flag = false;
-                }
-             }
-
-            if(flag)
-              break;
-            else {
-              if(this.index === length) {
-                this.index = 0;
-              } 
-              else
-                this.index++;
-            }
-               
-          }
-
-            if(flag) {
-              this.clearFigure(tempFigure);
-              this.showFigure(this.currentFigureArray[this.index]);
-              this.currentFigure = this.currentFigureArray[this.index];
-            }
-              
-            break;
+            this.rotateFigure()
+        break;
       case KeyCode.downCode:
             if(this.checkFigure(Direction.down))
               this.move(Direction.down);
@@ -149,15 +94,68 @@ export class RectComponent implements OnInit, AfterViewInit {
     }
   }
 
+  randomFigure():number {
+    let length:number = figureDate.length;
+    return Math.floor((Math.random() * length) + 1);
+  }
+
   createFigure() {
     this.cleareRow();
     let tempTemp:[Figure[], number];
     tempTemp = this.rectService.createFigure(this.numFigure);
     this.currentFigureArray = tempTemp[0];
     this.index = tempTemp[1];
-    this.numFigure++;
+    this.numFigure = this.randomFigure();
   }
 
+  rotateFigure():void {
+    let tempFigure:Figure = this.currentFigureArray[this.index];        
+    let length = this.currentFigureArray.length - 1;
+    let flag:boolean = true;
+            
+    if(this.index !== length) {
+      this.index++;
+    }
+    else {
+      this.index = 0;
+    }
+
+    while(this.index <= length) {
+      let figure:Figure = new Figure();
+      figure = this.currentFigureArray[this.index];
+      flag = true;
+              
+      for(let index in figure) {
+        if(index !== 'type') {
+          let block = figure[index];
+          let rowColumn = block.split('.');
+                
+          if(+rowColumn[1] < 0)
+              flag = false;
+              
+          if(+rowColumn[1] > this.column-1)
+              flag = false;
+        }
+      }
+
+      if(flag)
+          break;
+      else {
+        if(this.index === length) {
+          this.index = 0;
+        } 
+        else
+          this.index++;
+     }      
+   }
+
+   if(flag) {
+    this.setColorFigure(tempFigure, '#fff');
+    this.setColorFigure(this.currentFigureArray[this.index], '#2C93E8');
+   }
+
+  }
+  
   checkFigure(direction:Direction):boolean {
     let figure = this.currentFigureArray[this.index];
     
@@ -207,14 +205,11 @@ export class RectComponent implements OnInit, AfterViewInit {
   }
 
   cleareRow():void{
-
     if(this.fillArrayBlock.length !== 0) {
       let tempFillSort:string[] = this.fillArrayBlock.sort(this.sortArrayFill);
       let blockMin:number = +((tempFillSort[0].split('.'))[0]);
       let blockMax:number = +((tempFillSort[this.fillArrayBlock.length-1].split('.'))[0]);
       
-      console.log(blockMin);
-      console.log(blockMax);
       while(blockMin <= blockMax) {
           let tempArray:string[] = new Array<string>();
           tempArray= tempFillSort.filter(block => {
@@ -223,13 +218,13 @@ export class RectComponent implements OnInit, AfterViewInit {
             return block;
           });
 
-          if(tempArray.length === this.columnMax) {
+          if(tempArray.length === this.column) {
             tempArray.forEach(item => {
-              document.getElementById(item).setAttribute("fill", "#fff");
+              this.setColorBlock(item,"#fff")
             });
 
             this.fillArrayBlock.forEach(item => {
-                  document.getElementById(item).setAttribute("fill", "#fff");
+                  this.setColorBlock(item,"#fff")
               });
 
             this.fillArrayBlock = this.fillArrayBlock.filter(item => {
@@ -250,16 +245,13 @@ export class RectComponent implements OnInit, AfterViewInit {
               });
 
               this.fillArrayBlock.forEach(item => {
-                  document.getElementById(item).setAttribute("fill", "#2C93E8");
+                  this.setColorBlock(item,"#2C93E8")
               });
 
               this.valueScore.setScore();
               tempFillSort = this.fillArrayBlock.sort(this.sortArrayFill);
               blockMin = +((tempFillSort[0].split('.'))[0]);
               blockMax = +((tempFillSort[this.fillArrayBlock.length-1].split('.'))[0]);
-
-              console.log(blockMin);
-              console.log(blockMax);
           }
           else
             blockMax--
@@ -274,10 +266,10 @@ export class RectComponent implements OnInit, AfterViewInit {
         
         if(this.flag) {
           this.createFigure();
-          this.showFigure(this.currentFigureArray[this.index]);
+          this.setColorFigure(this.currentFigureArray[this.index],'#2C93E8');
           this.flag = false;
           this.fillArrayBlock.forEach( block => {
-            document.getElementById(block).setAttribute("fill", "#2C93E8");
+            this.setColorBlock(block,'#2C93E8');
         });
       }
     }, 1000);
@@ -287,22 +279,27 @@ export class RectComponent implements OnInit, AfterViewInit {
     clearInterval(this.interval);
   }
 
-  clearFigure(figure: Figure): void {
-    for (let item in figure) {
-      if (item.toString() !== 'type')
-          document.getElementById(figure[item]).setAttribute("fill", "#fff");
-    }
+  setColorFigure(figure:Figure, color:string) {
+    this.gridArray.map((item) => {
+      for (let index in figure) {
+        if(index.toString() === 'type') {
+            continue;
+        }
+        if(item.id === figure[index])
+            item.color = color;
+      }
+    });
   }
 
-  showFigure(figure: Figure): void {
-    for (let item in figure) {
-      if (item.toString() !== 'type')
-        document.getElementById(figure[item]).setAttribute("fill", "#2C93E8");
-    }
+  setColorBlock(block:string, color:string){
+    this.gridArray.map((item) => {
+      if(item.id === block)
+        item.color = color;
+    });
   }
 
   move(direction:Direction) {
-    this.clearFigure(this.currentFigureArray[this.index]);
+    this.setColorFigure(this.currentFigureArray[this.index],"#fff");
     
     let tempCurrentFigureArray = new Array<Figure>();
     let tempFigure:Figure = new Figure();
@@ -317,21 +314,19 @@ export class RectComponent implements OnInit, AfterViewInit {
         tempCurrentFigureArray.push(tempFigure);
       else if((tempFigure === undefined) && figure === this.currentFigureArray[this.index]) {
         this.flag = true;
-            for(let item in figure) {
-              if(item !== 'type')
+        for(let item in figure) {
+          if(item !== 'type')
                 this.fillArrayBlock.push(figure[item]);
-            }
         }
-          
-      }
-    
+      }   
+    }
 
     if(!this.flag) {
       let index = tempCurrentFigureArray.indexOf(fig);
       this.index = index;
       this.currentFigureArray = [];
       this.currentFigureArray = [...tempCurrentFigureArray];
-      this.showFigure(tempCurrentFigureArray[this.index]);
+      this.setColorFigure(tempCurrentFigureArray[this.index],'#2C93E8');
     }
     
   }
@@ -369,7 +364,7 @@ export class RectComponent implements OnInit, AfterViewInit {
       case Direction.down:
           block = `${+row + 1}.${column}`;
           index = mapBlockFill.indexOf(block);
-          if(this.rowMax !== (+row + 1) && index === -1)
+          if(this.row !== (+row + 1) && index === -1)
             return block;
         break;
       case Direction.left:

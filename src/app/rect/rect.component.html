@@ -1,8 +1,5 @@
 <svg class='big'>
-    <rect *ngFor="let item of gridArray" class='square'  fill = '#fff'  [id] = 'item.id'
+    <rect *ngFor="let item of gridArray" class='square' [ngStyle]="{fill:item.color}"  [id] = 'item.id'
         [attr.x]='item.x' [attr.y]='item.y' 
         [attr.width]='item.width' [attr.height]='item.height'></rect>
 </svg>
-
-
-<!--[ngStyle]="{fill:item.color}"-->
