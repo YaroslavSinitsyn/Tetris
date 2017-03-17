@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject }    from 'rxjs/Subject';
 
 import { Rectangle } from '../share/rectangle';
 import { Figure } from '../share/figure';
@@ -6,10 +7,25 @@ import { figureDate } from '../share/figureData';
 
 @Injectable()
 export class RectService {
-  nextFigureIndex:number;
-  createGrid(rowMax, columnMax): Rectangle[] {
+  private _nextFigureIndex:number;
+  
+  // Observable string sources
+  private changFigureEvent = new Subject();
+
+  // Observable string streams
+  changFigureEvent$ = this.changFigureEvent.asObservable();
+
+  get nextFigureIndex():number {
+    return this._nextFigureIndex;
+  }
+  set nextFigureIndex(index:number) {
+    this._nextFigureIndex = index;
+    this.changFigureEvent.next()
+  }
+
+  createGrid(rowMax, columnMax, ): Rectangle[] {
     let data: Rectangle[] = new Array<Rectangle>();
-    let rectangle: Rectangle = new Rectangle()
+    let rectangle: Rectangle = new Rectangle();
     for (var row = 0; row < rowMax; row++) {
       for (var column = 0; column < columnMax; column++) {
         rectangle.id = `${row}.${column}`;
@@ -22,7 +38,6 @@ export class RectService {
 
       return data;
   }
-
 
   createFigure(numFigure:number):[Figure[], number] {
     let currentFigure:Figure = figureDate[numFigure];

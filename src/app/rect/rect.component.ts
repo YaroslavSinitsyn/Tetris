@@ -8,16 +8,11 @@ import { Rectangle } from '../share/rectangle'
 
 
 enum KeyCode {
-  leftCode = 37,
-  upCode = 38,
-  rightCode = 39,
-  downCode = 40
+  leftCode = 37, upCode = 38, rightCode = 39, downCode = 40
 }
 
 enum Direction {
-  down,
-  left,
-  rigth
+  down, left, rigth
 }
 
 @Component({
@@ -95,7 +90,7 @@ export class RectComponent implements OnInit, AfterViewInit {
   }
 
   randomFigure():number {
-    let length:number = figureDate.length;
+    let length:number = figureDate.length-1;
     return Math.floor((Math.random() * length) + 1);
   }
 
@@ -106,6 +101,7 @@ export class RectComponent implements OnInit, AfterViewInit {
     this.currentFigureArray = tempTemp[0];
     this.index = tempTemp[1];
     this.numFigure = this.randomFigure();
+    this.rectService.nextFigureIndex = this.numFigure;
   }
 
   rotateFigure():void {
@@ -170,7 +166,6 @@ export class RectComponent implements OnInit, AfterViewInit {
               block = this.moveBlock(figure[item],direction);
               if(arrStr[1] === '0' || block === undefined)
                 return false;
-
             break;
           case Direction.rigth:
               block = this.moveBlock(figure[item],direction);

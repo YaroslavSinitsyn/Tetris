@@ -10,13 +10,15 @@ import { ScoreService } from 'app/share/score.service';
 import { MenuPanelComponent } from './menu-panel/menu-panel.component';
 import { GameCycleService } from './share/lifecycle-game.service';
 import { RectService } from './rect/rect.service';
+import { PrevieRectComponent } from './rect/previe-rect.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RectComponent,
     ValueComponent,
-    MenuPanelComponent
+    MenuPanelComponent,
+    PrevieRectComponent
   ],
   imports: [
     BrowserModule,
