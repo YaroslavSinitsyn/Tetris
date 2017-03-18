@@ -43,16 +43,13 @@ export class PrevieRectComponent implements OnInit, AfterViewInit {
 
   changeFigure(figure):Figure {
     let newFigure:Figure = new Figure();
-    console.log(figure);
     for(let item in figure){
-      console.log(figure[item]);
 
       if(item !== 'type')
         newFigure[item] = `${figure[item].split('.')[0]}.${(+figure[item].split('.')[1] -3).toString()}`;
 
     }
     
-    console.log(newFigure);
     return newFigure;
   }
 

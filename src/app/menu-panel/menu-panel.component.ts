@@ -24,7 +24,7 @@ export class MenuPanelComponent {
   }
 
   onHighScore() {
-    
+    this.gameService.highScore();
   }
 
 }

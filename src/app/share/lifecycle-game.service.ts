@@ -6,7 +6,7 @@ export enum CycleGame {
     Start,
     Stop,
     Pause,
-    HigtScore
+    HighScore
 }
 
 @Injectable()
@@ -33,5 +33,9 @@ export class GameCycleService {
 
     pauseGame() {
         this.gameEvent.next(CycleGame.Pause);
+    }
+
+    highScore() {
+        this.gameEvent.next(CycleGame.HighScore);
     }
 }

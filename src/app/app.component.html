@@ -1,13 +1,13 @@
 <main>
     <app-menu-panel></app-menu-panel>
-    <div id='main'>
+    <div id='main' *ngIf="condition" >
         <rect-comp [row]="20" [column]="10"></rect-comp>
     </div>
-    <div id='view'>
+    <div id='view' *ngIf="condition" >
         <app-previe-rect [row]="4" [column]="4"></app-previe-rect>
     </div>
-    <div id="score">
+    <div id="score" *ngIf="condition">
         <value-comp></value-comp>
     </div>
-
+    <app-table-high-score id='scoretable' *ngIf="!condition"></app-table-high-score>
 </main>
