@@ -15,6 +15,8 @@ import { GameCycleService } from './share/lifecycle-game.service';
 import { RectService } from './rect/rect.service';
 import { PrevieRectComponent } from './rect/previe-rect.component';
 import { TableHighScoreComponent } from './table-high-score/table-high-score.component';
+import { PopupGameOverComponent } from './popup-game-over/popup-game-over.component';
+import { DataBaseService } from "./share/data-base.service";
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import { TableHighScoreComponent } from './table-high-score/table-high-score.com
     ValueComponent,
     MenuPanelComponent,
     PrevieRectComponent,
-    TableHighScoreComponent
+    TableHighScoreComponent,
+    PopupGameOverComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +34,7 @@ import { TableHighScoreComponent } from './table-high-score/table-high-score.com
     HttpModule,
     AngularFireModule.initializeApp(firebaseConfig)
   ],
-  providers: [ScoreService, GameCycleService, RectService],
+  providers: [ScoreService, GameCycleService, RectService, DataBaseService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

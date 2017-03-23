@@ -15,8 +15,8 @@ export class MenuPanelComponent {
     this.gameService.startGame();
   }
 
-  onStop() {
-    this.gameService.stopGame();
+  onNewGame() {
+    this.gameService.newGame();
   }
 
   onPause() {

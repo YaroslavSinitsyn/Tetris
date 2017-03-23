@@ -3,17 +3,14 @@ import { Subject }    from 'rxjs/Subject';
 
 
 export enum CycleGame {
-    Start,
-    Stop,
-    Pause,
-    HighScore
+    NewGame, Start, Pause, HighScore, GameOver
 }
 
 @Injectable()
 export class GameCycleService {
-    state:CycleGame = CycleGame.Stop;
+    state:CycleGame = CycleGame.NewGame;
     
-    getState(){
+    getState() {
         return this.state;
     }
     // Observable string sources
@@ -27,8 +24,8 @@ export class GameCycleService {
         this.gameEvent.next(CycleGame.Start);
     }
 
-    stopGame() {
-        this.gameEvent.next(CycleGame.Stop);
+    newGame() {
+        this.gameEvent.next(CycleGame.NewGame);
     }
 
     pauseGame() {
@@ -37,5 +34,10 @@ export class GameCycleService {
 
     highScore() {
         this.gameEvent.next(CycleGame.HighScore);
+    }
+
+    gameOver() {
+        this.state = CycleGame.GameOver;
+        this.gameEvent.next(CycleGame.GameOver);
     }
 }

@@ -23,7 +23,7 @@ enum Direction {
 })
 export class RectComponent implements OnInit, AfterViewInit {
   gridArray:Rectangle[];
-  interval:any;
+  interval:any = 0;
   currentFigureArray:Figure[] = new Array<Figure>();
   fillArrayBlock:string[] = new Array<string>();
   flag:boolean = false;
@@ -35,21 +35,29 @@ export class RectComponent implements OnInit, AfterViewInit {
   constructor(private rectService:RectService, private gameCycle:GameCycleService, private valueScore:ScoreService ) {
     gameCycle.gameEvent$.subscribe((val)=>{
       console.log(val);
-      if(this.gameCycle.state !== CycleGame.Start && val == CycleGame.Start){
+      if(this.gameCycle.state !== CycleGame.Start && val == CycleGame.Start) {
          this.gameCycle.state = CycleGame.Start;
          this.start();
       }
           
-      if(this.gameCycle.state !== CycleGame.Stop && val == CycleGame.Stop){
-        this.gameCycle.state = CycleGame.Stop;
+      if(this.gameCycle.state !== CycleGame.NewGame && val == CycleGame.NewGame) {
+        this.gameCycle.state = CycleGame.NewGame;
         this.stop();
+        this.fillArrayBlock.forEach( (item)=> {
+            this.setColorBlock(item, '#fff');
+        })
+        this.fillArrayBlock = new Array<string>();
+        this.setColorFigure( this.currentFigureArray[this.index],'#fff');
+        this.numFigure = this.randomFigure();
+        this.createFigure();
+        this.setColorFigure(this.currentFigureArray[this.index], '#2C93E8');
+        this.valueScore.clearScore();
       }
           
       if(this.gameCycle.state !== CycleGame.Pause && val == CycleGame.Pause){
           this.gameCycle.state = CycleGame.Pause;
           this.stop();
       }
-          
     })
   }
 
@@ -65,7 +73,7 @@ export class RectComponent implements OnInit, AfterViewInit {
 
   @HostListener('window:keydown', ['$event'])
   keyboardInput(event: KeyboardEvent) {
-    if(this.gameCycle.state === CycleGame.Stop)
+    if(this.gameCycle.state === CycleGame.NewGame)
         return;
 
     switch (event.keyCode) {
@@ -205,6 +213,13 @@ export class RectComponent implements OnInit, AfterViewInit {
       let blockMin:number = +((tempFillSort[0].split('.'))[0]);
       let blockMax:number = +((tempFillSort[this.fillArrayBlock.length-1].split('.'))[0]);
       
+      if(blockMin === 0)
+      {
+        console.log('Game Over');
+        if(this.gameCycle.state !== CycleGame.GameOver)
+          this.gameCycle.gameOver();
+      }
+
       while(blockMin <= blockMax) {
           let tempArray:string[] = new Array<string>();
           tempArray= tempFillSort.filter(block => {
@@ -259,6 +274,9 @@ export class RectComponent implements OnInit, AfterViewInit {
     this.interval = setInterval(() => {
         this.move(Direction.down);
         
+        if(this.gameCycle.state === CycleGame.GameOver)
+          this.stop();
+          
         if(this.flag) {
           this.createFigure();
           this.setColorFigure(this.currentFigureArray[this.index],'#2C93E8');
@@ -271,7 +289,10 @@ export class RectComponent implements OnInit, AfterViewInit {
   }
 
   stop(): void {
-    clearInterval(this.interval);
+    if(this.interval !== 0){
+      clearInterval(this.interval);
+      this.interval = 0;
+    }
   }
 
   setColorFigure(figure:Figure, color:string) {

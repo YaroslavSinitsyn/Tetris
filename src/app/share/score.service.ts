@@ -15,4 +15,10 @@ export class ScoreService {
             this.scoreValue.level++;
         }
     }
+
+    clearScore():void {
+        this.scoreValue.lines = 1;
+        this.scoreValue.level = 0;
+        this.scoreValue.point = 0;
+    }
 }

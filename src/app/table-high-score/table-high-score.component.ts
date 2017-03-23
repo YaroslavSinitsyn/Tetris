@@ -1,118 +1,38 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AngularFire, FirebaseListObservable } from "angularfire2";
+
+class Record {
+  name:string;
+  date:string;
+  score:number;
+}
 
 @Component({
   selector: 'app-table-high-score',
   templateUrl: './table-high-score.component.html',
   styleUrls: ['./table-high-score.component.css']
 })
-export class TableHighScoreComponent {
+export class TableHighScoreComponent implements OnInit {
 
-  games : [{
-        game: string,
-        platform : string,
-        release : string
-    }];
-    constructor(){
+  arrayRecord:Record[];
 
-        this.games = [{
-            game : "Deus Ex: Mankind Divided",
-            platform: " Xbox One, PS4, PC",
-            release : "August 23"
-        },
-        {
-            game : "Hue",
-            platform: " Xbox One, PS4, Vita, PC",
-            release : "August 23"
-        },
-        {
-            game : "The Huntsman: Winter's Curse",
-            platform: "PS4",
-            release : "August 23"
-        },
-        {
-            game : "The Huntsman: Winter's Curse",
-            platform: "PS4",
-            release : "August 23"
-        },
-        {
-            game : "Deus Ex: Mankind Divided",
-            platform: " Xbox One, PS4, PC",
-            release : "August 23"
-        },
-        {
-            game : "Hue",
-            platform: " Xbox One, PS4, Vita, PC",
-            release : "August 23"
-        },
-        {
-            game : "The Huntsman: Winter's Curse",
-            platform: "PS4",
-            release : "August 23"
-        },
-        {
-            game : "The Huntsman: Winter's Curse",
-            platform: "PS4",
-            release : "August 23"
-        },
-        {
-            game : "Deus Ex: Mankind Divided",
-            platform: " Xbox One, PS4, PC",
-            release : "August 23"
-        },
-        {
-            game : "Hue",
-            platform: " Xbox One, PS4, Vita, PC",
-            release : "August 23"
-        },
-        {
-            game : "The Huntsman: Winter's Curse",
-            platform: "PS4",
-            release : "August 23"
-        },
-        {
-            game : "The Huntsman: Winter's Curse",
-            platform: "PS4",
-            release : "August 23"
-        },
-        {
-            game : "Deus Ex: Mankind Divided",
-            platform: " Xbox One, PS4, PC",
-            release : "August 23"
-        },
-        {
-            game : "Hue",
-            platform: " Xbox One, PS4, Vita, PC",
-            release : "August 23"
-        },
-        {
-            game : "The Huntsman: Winter's Curse",
-            platform: "PS4",
-            release : "August 23"
-        },
-        {
-            game : "The Huntsman: Winter's Curse",
-            platform: "PS4",
-            release : "August 23"
-        },
-        {
-            game : "Deus Ex: Mankind Divided",
-            platform: " Xbox One, PS4, PC",
-            release : "August 23"
-        },
-        {
-            game : "Hue",
-            platform: " Xbox One, PS4, Vita, PC",
-            release : "August 23"
-        },
-        {
-            game : "The Huntsman: Winter's Curse",
-            platform: "PS4",
-            release : "August 23"
-        },
-        {
-            game : "The Huntsman: Winter's Curse",
-            platform: "PS4",
-            release : "August 23"
-        }]
-    };
+  items$:FirebaseListObservable<any>;
+  constructor(private af: AngularFire) {
+    this.items$ = this.af.database.list('');
+  };
+
+  ngOnInit(): void {
+    this.arrayRecord = new Array<Record>();
+    this.items$.forEach(val => {
+      for(let key in val) {
+       let record:Record = new Record();
+        console.log(val[key].name);
+       record.name = val[key].name;
+       record.date = val[key].date;
+       record.score = val[key].score;
+       this.arrayRecord.push(record);
+      }
+    });
+  }
+  
 }
