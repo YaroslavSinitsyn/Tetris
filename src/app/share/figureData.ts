@@ -3,6 +3,10 @@ import { Figure } from 'app/share/figure';
 export enum TypeFigure {
     T, L, Q, I, Z, S, J
 }
+
+export enum Direction {
+  down, left, rigth
+}
 export const figureDate:Figure[] = [
     {
         block1:'1.4', 

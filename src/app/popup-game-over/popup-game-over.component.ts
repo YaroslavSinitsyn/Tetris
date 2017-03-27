@@ -36,8 +36,9 @@ export class PopupGameOverComponent {
         score:this.valueScore.point,
         date:strDate
       });
-
-   this.gameService.highScore();
+   
+   if(this.nameUser !== '')
+      this.gameService.highScore();
   }
 
 }

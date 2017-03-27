@@ -9,6 +9,12 @@
     <div id="score" *ngIf="condition">
         <value-comp></value-comp>
     </div>
+
+    <input type="image" (click) ="onUp()" style="margin-top: 200px; margin-left: 52px; width: 48px; height: 48px" src="./assets/upward.png" /><br>
+    <input type="image" (click) = "onLeft()"style="width: 48px; height: 48px" src="./assets/back.png" />
+    <input type="image" (click) = "onDown()" style="width: 48px; height: 48px" src="./assets/download.png" />
+    <input type="image" (click) = "onRigth()" style="width: 48px; height: 48px" src="./assets/forward.png" />
+
     <app-table-high-score id='scoretable' *ngIf="!condition"></app-table-high-score>
     <app-popup-game-over *ngIf="gameOver"></app-popup-game-over>
 </main>

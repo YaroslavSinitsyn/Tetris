@@ -52,12 +52,35 @@ export class RectComponent implements OnInit, AfterViewInit {
         this.createFigure();
         this.setColorFigure(this.currentFigureArray[this.index], '#2C93E8');
         this.valueScore.clearScore();
+        //this.gridArray = [];
       }
           
       if(this.gameCycle.state !== CycleGame.Pause && val == CycleGame.Pause){
           this.gameCycle.state = CycleGame.Pause;
           this.stop();
       }
+    })
+
+    gameCycle.keyEvent$.subscribe((val)=>{
+        switch (val) {
+      case '37':
+            if(this.checkFigure(Direction.left))
+              this.move(Direction.left);
+        break;
+      case '39':
+            if(this.checkFigure(Direction.rigth))
+              this.move(Direction.rigth);
+        break;
+      case '38':
+            this.rotateFigure()
+        break;
+      case '40':
+            if(this.checkFigure(Direction.down))
+              this.move(Direction.down);
+        break;
+      default:
+        break;
+    }
     })
   }
 
@@ -73,6 +96,7 @@ export class RectComponent implements OnInit, AfterViewInit {
 
   @HostListener('window:keydown', ['$event'])
   keyboardInput(event: KeyboardEvent) {
+    console.log(event.keyCode);
     if(this.gameCycle.state === CycleGame.NewGame)
         return;
 

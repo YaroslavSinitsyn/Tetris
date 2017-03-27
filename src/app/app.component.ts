@@ -11,7 +11,7 @@ import { GameCycleService, CycleGame } from 'app/share/lifecycle-game.service';
 export class AppComponent {
   condition:boolean = true;
   gameOver:boolean = false;
-
+  o:any;
   constructor(private gameService:GameCycleService) {
     gameService.gameEvent$.subscribe( (val)=> {
       if(this.gameService.state !== CycleGame.HighScore && val == CycleGame.HighScore) {
@@ -28,5 +28,21 @@ export class AppComponent {
         this.gameOver = false;
     });
 
+  }
+
+   onUp() {
+    this.gameService.onUp();
+  }
+
+  onLeft() {
+    this.gameService.onLeft();
+  }
+
+  onRigth() {
+    this.gameService.onRigth();
+  }
+
+  onDown() {
+    this.gameService.onDown();
   }
 }
