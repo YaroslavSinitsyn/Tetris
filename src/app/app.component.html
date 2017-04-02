@@ -1,4 +1,4 @@
-<main style="width:800px; margin:0 auto;">
+<main style="width:480px; margin:0 auto;">
     <app-menu-panel></app-menu-panel>
     <div id='main' *ngIf="condition">
         <rect-comp [row]="20" [column]="10"></rect-comp>
@@ -9,12 +9,20 @@
     <div id="score" *ngIf="condition">
         <value-comp></value-comp>
     </div>
-
-    <input type="image" (click) ="onUp()" style="margin-top: 200px; margin-left: 52px; width: 48px; height: 48px" src="./assets/upward.png" /><br>
-    <input type="image" (click) = "onLeft()"style="width: 48px; height: 48px" src="./assets/back.png" />
-    <input type="image" (click) = "onDown()" style="width: 48px; height: 48px" src="./assets/download.png" />
-    <input type="image" (click) = "onRigth()" style="width: 48px; height: 48px" src="./assets/forward.png" />
-
+    <div  *ngIf="condition">
+      <button style="margin-top: 230px; margin-left: 46px;" (click) = "onUp()">
+        <img src="./assets/upward.png" width="25" height="25"/>
+      </button><br>
+      <button style="margin-top: 5px" (click) = "onLeft()">
+        <img src="./assets/back.png" width="25" height="25"/>
+      </button>
+      <button (click) = "onDown()">
+        <img src="./assets/download.png" width="25" height="25"/>
+      </button>
+      <button (click) = "onRigth()">
+        <img src="./assets/forward.png" width="25" height="25"/>
+      </button>
+    </div>
     <app-table-high-score id='scoretable' *ngIf="!condition"></app-table-high-score>
     <app-popup-game-over *ngIf="gameOver"></app-popup-game-over>
 </main>
