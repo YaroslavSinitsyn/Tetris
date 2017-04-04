@@ -9,3 +9,16 @@
     width: 110px;
     height: 110px;
 }
+
+.svg-t {
+    width: 210px; 
+    height: 410px;
+}
+
+@media all and (min-width: 768px) {
+.svg-t {
+    width: 270px; 
+    height: 530px;
+    }
+}
+

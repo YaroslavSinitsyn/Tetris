@@ -1,3 +1,4 @@
+
 <div class="flex-container">
   <div class="row">
     <app-menu-panel></app-menu-panel>
@@ -7,7 +8,7 @@
         <value-comp></value-comp>
         <app-previe-rect [row]="4" [column]="4"></app-previe-rect>
         <div>
-          <button style="margin-top: 0px; margin-left: 66px;" (click) = "onUp()">
+          <button style="margin-top: 164px; margin-left: 68px;" (click) = "onUp()">
             <img src="./assets/upward.png" width="48" height="48"/>
           </button><br>
           <button style="margin-top: 5px" (click) = "onLeft()">
@@ -22,6 +23,10 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="game-over-center">
+    <app-popup-game-over></app-popup-game-over>
   </div>
 </div>
     <!--<div id='main' *ngIf="condition">

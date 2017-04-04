@@ -1,11 +1,15 @@
 <div id="light" class="white_content">
-  <div style="margin-left: 50px; margin-top: 5px;">GAME OVER</div>
-  <div style="margin-top: 20px;">Level: {{valueScore.level}}</div>
-  <div style="margin-top: 10px;">Line:  {{valueScore.lines}}</div>
-  <div style="margin-top: 10px;">Score: {{valueScore.point}}</div>
+  <div>GAME OVER</div>
+  
+  <div>
+    <div>Level: {{valueScore.level}}</div>
+    <div>Line:  {{valueScore.lines}}</div>
+    <div>Score: {{valueScore.point}}</div>
+  </div>
+  
   <form >
-    <input (keyup)="onKey($event)" type="text" style ="margin-top: 10px;" placeholder="Enter you name!" required>
-    <button type="submit" style="margin-left: 45px; margin-top: 5px;" (click)="onSave()" [disabled] = "">Save score</button>
+    <input (keyup)="onKey($event)" style="margin-left: 5px; margin-right: 5px;" type="text" placeholder="Enter you name!" required><br>
+    <button type="submit" style="margin-left: 50px; margin-top: 5px;" (click)="onSave()" [disabled] = "">Save score</button>
  </form>
 </div>
 

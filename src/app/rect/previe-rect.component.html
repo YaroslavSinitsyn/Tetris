@@ -1,4 +1,4 @@
-<svg width="106" heigth="106" viexBox="0 0 106 106">
+<svg width="106" heigth="106" viewBox="0 0 106 106">
     <rect *ngFor="let item of grid" class='square' [ngStyle]="{fill:item.color}" [id] = 'item.id'
         [attr.x]='item.x' [attr.y]='item.y' 
         [attr.width]='item.width' [attr.height]='item.height'></rect>
