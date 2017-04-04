@@ -1,10 +1,13 @@
-<div id="header">
-  <div id="nav">
-    <ul class="nav">  
-      <li><a href='#' (click)="onNewGame()">New Game</a></li>
-      <li><a href='#' (click)="onStart()">Start</a></li>
-      <li><a href='#' (click)="onPause()">Pause</a></li>
-      <li><a href="#" (click)="onHighScore()">High score</a></li>
-    </ul>
+<nav class="flexy-nav">
+  <div id="flexy-nav__toggle" class="menuButton">
+    <span style="margin-top: 5px;" class="icon-bar"></span>
+    <span style="margin-top: 5px;"class="icon-bar"></span>
+    <span style="margin-top: 5px;" class="icon-bar"></span>
   </div>
-</div>
+  <ul id="flexy-nav__items" class = "flexy-nav__items">
+    <li class="flexy-nav__item"><a href="#" class="flexy-nav__link">New Game</a></li>
+    <li class="flexy-nav__item"><a href="#" class="flexy-nav__link">Start</a></li>
+    <li class="flexy-nav__item"><a href="#" class="flexy-nav__link">Pause</a></li>
+    <li class="flexy-nav__item"><a href="#" class="flexy-nav__link">Higth Score</a></li>
+  </ul>
+</nav>

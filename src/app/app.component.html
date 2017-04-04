@@ -1,6 +1,30 @@
-<main style="width:480px; margin:0 auto;">
+<div class="flex-container">
+  <div class="row">
     <app-menu-panel></app-menu-panel>
-    <div id='main' *ngIf="condition">
+    <div class="flex-container-row">
+      <rect-comp [row]="20" [column]="10"></rect-comp>
+      <div class="flex-column">
+        <value-comp></value-comp>
+        <app-previe-rect [row]="4" [column]="4"></app-previe-rect>
+        <div>
+          <button style="margin-top: 0px; margin-left: 66px;" (click) = "onUp()">
+            <img src="./assets/upward.png" width="48" height="48"/>
+          </button><br>
+          <button style="margin-top: 5px" (click) = "onLeft()">
+            <img src="./assets/back.png" width="48" height="48"/>
+          </button>
+          <button (click) = "onDown()">
+            <img src="./assets/download.png" width="48" height="48"/>
+          </button>
+          <button (click) = "onRigth()">
+            <img src="./assets/forward.png" width="48" height="48"/>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <!--<div id='main' *ngIf="condition">
         <rect-comp [row]="20" [column]="10"></rect-comp>
     </div>
     <div id='view' *ngIf="condition" >
@@ -25,4 +49,4 @@
     </div>
     <app-table-high-score id='scoretable' *ngIf="!condition"></app-table-high-score>
     <app-popup-game-over *ngIf="gameOver"></app-popup-game-over>
-</main>
+</main>-->

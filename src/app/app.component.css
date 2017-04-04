@@ -1,25 +1,69 @@
-#main {
-    margin-top: 10px;
-    float: left;
-    width: 270px;
+.flex-container {
+    height: 100%;
+    padding: 0;
+    margin: 5px;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    align-items: baseline;
 }
 
-#view {
-    margin-top: 10px;
+.flex-container-row {
+  display: flex;
+  flex-direction: row;
+  height: 400px;
+  justify-content:flex-start;
+  align-content: center;
+  flex-flow: row wrap;
+  margin-top:10px;
+  margin-left: 10px;
+}
+.row {
+    width: 400px;
+    border: 1px solid blue;
+}
+.flex-item {
+    background-color: tomato;
+    padding: 5px;
+    margin: 5px;
+    line-height: 20px;
+    color: white;
+    text-align: center;
 }
 
-#score {
-    margin-top: 0px;
+.flex-column {
+  display: flex;
+  margin-top: 0px;
+  margin-left: 5px;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items:center;
 }
 
-#scoretable {
-    margin-top:300px;
-}
+/* медиа-запросы */
+@media all and (min-width: 768px) {
 
-#triangle-left {
-	width: 0;
-	height: 0;
-	border-top: 50px solid transparent;
-	border-right: 100px solid red;
-	border-bottom: 50px solid transparent;
+  .row {
+    width: 500px;
+    border: 1px solid blue;
+    height: 600px;
+  }
+
+  .flex-container {
+    margin: 10px;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+  }
+
+  .flex-item {
+    background-color: tomato;
+    padding: 5px;
+    margin: 5px;
+    line-height: 20px;
+    color: white;
+    text-align: center;
+  }
 }
