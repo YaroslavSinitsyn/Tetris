@@ -11,6 +11,13 @@ export class MenuPanelComponent {
   
   constructor(private gameService:GameCycleService){}
 
+  onClick(){
+    console.log('ererteter');
+    
+    var toggle = document.querySelector("#flexy-nav__toggle");
+    var nav = document.querySelector("#flexy-nav__items");
+    nav.classList.contains("flexy-nav__items--visible") ? nav.classList.remove("flexy-nav__items--visible") : nav.classList.add("flexy-nav__items--visible");
+  }
   onStart() {
     this.gameService.startGame();
   }

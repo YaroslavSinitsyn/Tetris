@@ -1,18 +1,10 @@
 .square { 
-    stroke: #222 
-    }
-.big{
-    width: 260px;
-    height: 510px;
-}
-.preview{
-    width: 110px;
-    height: 110px;
+  stroke: #222 
 }
 
 .svg-t {
-    width: 210px; 
-    height: 410px;
+  width: 222px; 
+  height: 442px;
 }
 
 @media all and (min-width: 768px) {

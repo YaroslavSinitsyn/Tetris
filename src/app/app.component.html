@@ -1,5 +1,6 @@
 
 <div class="flex-container">
+  
   <div class="row">
     <app-menu-panel></app-menu-panel>
     <div class="flex-container-row">
@@ -7,27 +8,27 @@
       <div class="flex-column">
         <value-comp></value-comp>
         <app-previe-rect [row]="4" [column]="4"></app-previe-rect>
-        <div>
-          <button style="margin-top: 164px; margin-left: 68px;" (click) = "onUp()">
-            <img src="./assets/upward.png" width="48" height="48"/>
+        <div style="margin-top: 30px">
+          <button class="button-up" (click) = "onUp()">
+            <img class="img-size" src="./assets/upward.png"/>
           </button><br>
-          <button style="margin-top: 5px" (click) = "onLeft()">
-            <img src="./assets/back.png" width="48" height="48"/>
+          <button (click) = "onLeft()">
+            <img class="img-size" src="./assets/back.png"/>
           </button>
           <button (click) = "onDown()">
-            <img src="./assets/download.png" width="48" height="48"/>
+            <img class="img-size" src="./assets/download.png"/>
           </button>
           <button (click) = "onRigth()">
-            <img src="./assets/forward.png" width="48" height="48"/>
+            <img class="img-size" src="./assets/forward.png"/>
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="game-over-center">
+  <!--<div class="game-over-center">
     <app-popup-game-over></app-popup-game-over>
-  </div>
+  </div>-->
 </div>
     <!--<div id='main' *ngIf="condition">
         <rect-comp [row]="20" [column]="10"></rect-comp>

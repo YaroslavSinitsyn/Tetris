@@ -1,4 +1,4 @@
-<svg class="svg-t">
+<svg class="svg-t" viewBox="0 0 270 530">
     <rect *ngFor="let item of gridArray" class='square' [ngStyle]="{fill:item.color}"  [id] = 'item.id'
         [attr.x]='item.x' [attr.y]='item.y' 
         [attr.width]='item.width' [attr.height]='item.height'></rect>

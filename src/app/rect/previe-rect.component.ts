@@ -33,6 +33,15 @@ export class PrevieRectComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.grid = this.rectSerice.createGrid(this.row, this.column);
+
+    let shape = document.getElementsByTagName("svg")[1];
+    console.log('ttttttttt');
+    if(window.screen.height > 640) {
+      shape.setAttribute("viewBox", "0 0 106 106"); 
+    }
+    else {
+      shape.setAttribute("viewBox", "0 0 156 156"); 
+    }
   }
 
   ngAfterViewInit(): void {
