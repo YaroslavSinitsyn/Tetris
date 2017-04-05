@@ -48,6 +48,10 @@
   position:absolute;
 }
 
+  .game-over-show {
+    display: flex;
+  }
+
 .button-up {
   margin-left: 0px;
 }
@@ -105,7 +109,6 @@
   }
 
   .game-over-center {
-    display: flex;
     justify-content: center;
     align-items:center;
     height: 70%;

@@ -52,7 +52,6 @@ export class RectComponent implements OnInit, AfterViewInit {
         this.createFigure();
         this.setColorFigure(this.currentFigureArray[this.index], '#2C93E8');
         this.valueScore.clearScore();
-        //this.gridArray = [];
       }
           
       if(this.gameCycle.state !== CycleGame.Pause && val == CycleGame.Pause){

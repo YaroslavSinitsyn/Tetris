@@ -3,7 +3,7 @@
   
   <div class="row">
     <app-menu-panel></app-menu-panel>
-    <div class="flex-container-row">
+    <div class="flex-container-row" *ngIf="condition">
       <rect-comp [row]="20" [column]="10"></rect-comp>
       <div class="flex-column">
         <value-comp></value-comp>
@@ -24,12 +24,19 @@
         </div>
       </div>
     </div>
+    <app-table-high-score *ngIf="!condition"></app-table-high-score>
   </div>
 
-  <!--<div class="game-over-center">
-    <app-popup-game-over></app-popup-game-over>
-  </div>-->
+
+  <div class="game-over-center" [style.display]="displayView">
+    <app-popup-game-over ></app-popup-game-over>
+  </div>
+
 </div>
+  
+  
+
+<!--</div>-->
     <!--<div id='main' *ngIf="condition">
         <rect-comp [row]="20" [column]="10"></rect-comp>
     </div>

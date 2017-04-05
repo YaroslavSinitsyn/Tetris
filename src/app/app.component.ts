@@ -11,6 +11,7 @@ import { GameCycleService, CycleGame } from 'app/share/lifecycle-game.service';
 export class AppComponent {
   condition:boolean = true;
   gameOver:boolean = false;
+  displayView:string = "none";
   o:any;
   constructor(private gameService:GameCycleService) {
     gameService.gameEvent$.subscribe( (val)=> {
@@ -22,10 +23,13 @@ export class AppComponent {
         this.condition = true;
       
       if(this.gameService.state === CycleGame.GameOver && val === CycleGame.GameOver) {
+         this.displayView = "flex";
          this.gameOver = true;
       }
-      else
+      else {
+        this.displayView = "none";
         this.gameOver = false;
+      }
     });
 
   }
