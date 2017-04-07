@@ -23,13 +23,13 @@ export class GameCycleService {
 
     // Observable string streams
     keyEvent$ = this.keyEvent.asObservable();
-    
-    startGame() {
-        this.gameEvent.next(CycleGame.Start);
-    }
 
     newGame() {
         this.gameEvent.next(CycleGame.NewGame);
+    }
+
+    startGame() {
+        this.gameEvent.next(CycleGame.Start);
     }
 
     pauseGame() {
