@@ -1,0 +1,22 @@
+<div class="flex-container-row">
+  <rect-comp [row]="20" [column]="10"></rect-comp>
+  <div class="flex-column">
+    <value-comp></value-comp>
+    <app-previe-rect [row]="4" [column]="4"></app-previe-rect>
+    
+    <div style="margin-top: 30px">
+      <button class="button-up" (click) = "onUp()">
+      <img class="img-size" src="./assets/upward.png"/>
+      </button><br>
+      <button (click) = "onLeft()">
+        <img class="img-size" src="./assets/back.png"/>
+      </button>
+      <button (click) = "onDown()">
+        <img class="img-size" src="./assets/download.png"/>
+      </button>
+      <button (click) = "onRigth()">
+        <img class="img-size" src="./assets/forward.png"/>
+      </button>
+    </div>
+  </div>
+</div>

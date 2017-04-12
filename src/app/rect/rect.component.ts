@@ -1,4 +1,4 @@
-import { Component, Input, HostListener, AfterViewInit, OnInit} from '@angular/core';
+import { Component, Input, HostListener, AfterViewInit, OnInit } from '@angular/core';
 import { Figure } from '../share/figure';
 import { figureDate } from '../share/figureData';
 import { ScoreService } from '../share/score.service';
@@ -54,9 +54,13 @@ export class RectComponent implements OnInit, AfterViewInit {
         this.valueScore.clearScore();
       }
           
-      if(this.gameCycle.state !== CycleGame.Pause && val == CycleGame.Pause){
+      if(this.gameCycle.state !== CycleGame.Pause && val == CycleGame.Pause) {
           this.gameCycle.state = CycleGame.Pause;
           this.stop();
+      }
+
+      if(this.gameCycle.state !== CycleGame.HighScore && val == CycleGame.HighScore) {
+        this.stop();
       }
     })
 
